@@ -1,5 +1,5 @@
 start:
-	docker start
+	docker start postgres
 postgres:
 	docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 createdb:

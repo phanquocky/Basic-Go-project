@@ -46,3 +46,29 @@ $ migrate create -ext sql -dir db/migration -seq init_schema
 # Note
 
 Composition instead of inheritance
+
+# Database transaction
+
+## ACID property
+
+Atomicity - Consistency - Isolation - Durability
+
+## Isolation level
+
+### Read phenomena
+
+1. Dirty read: A transaction read data written by other concurrent uncommited transaction
+2. Non-repeatable read: A transaction read same row twice and sees different values because its has been modify by other concurrent commited transaction
+3. Phantom read: The same Non-repeatable read but for mutiple rows
+4. Serialization anomaly: The result of a group of concurrent commited transaction is impossible to achieve if we try to run them sequentially in any order without overlapping
+
+### 4 Standard Isolation level
+
+1. Read uncommitted
+2. Read committed
+3. Repeatable read
+4. Serializable
+
+# GIN
+
+Postman: https://api.postman.com/collections/24261537-a1befa63-2b4e-439b-b451-57359548bdf8?access_key=PMAT-01HD5MEECR9EAJF3PVJ166HTYX

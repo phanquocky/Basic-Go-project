@@ -6,22 +6,27 @@ import (
 	"fmt"
 )
 
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
 // store is extend of Queries, to exec db tx
 // Using composition instead of inheritance
-type Store struct {
+type SQLStore struct {
 	*Queries
 	db *sql.DB // it require to do db tx
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // execTx executes a function within a database transaction
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil) // TODO: this Option to point Isolation Level. Default is Read-commited in case of Postgres
 	if err != nil {
 		return err
@@ -55,7 +60,7 @@ type TransferTxResult struct {
 
 // TransferTx perform money transfer from one account to another account
 // It create new Transfer record, add new account entries, update new account balance
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {

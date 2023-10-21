@@ -16,4 +16,7 @@ test:
 	go test ./... -v -cover 
 server:
 	go run main.go
-.PHONY: start postgres createdb dropdb migrateup migratedown sqlc test server
+mock:
+	mockgen --build_flags=--mod=mod -destination=db/mock/store.go -package=mockdb  simplebank/db/sqlc Store
+
+.PHONY: start postgres createdb dropdb migrateup migratedown sqlc test server mock

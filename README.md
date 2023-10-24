@@ -72,3 +72,25 @@ Atomicity - Consistency - Isolation - Durability
 # GIN
 
 Postman: https://api.postman.com/collections/24261537-a1befa63-2b4e-439b-b451-57359548bdf8?access_key=PMAT-01HD5MEECR9EAJF3PVJ166HTYX
+
+# Docker
+
+Run 2 containers in the same network
+The problem is in the ENV file the link of postgres database is: `DB_SOURCE=postgres://postgres:postgres@localhost:5432/simple_bank?sslmode=disable`. But in the `simplebank` container doesn't know the localhost because `postgres` container and `simplebank` container run separate IP. Run `docker inspect <container_name>` to check the IP address.
+The easy way to solve it is change the `DB_SOURCE=postgres://postgres:postgres@localhost:5432/simple_bank?sslmode=disable` to `DB_SOURCE=postgres://postgres:postgres@<postgres_IP>:5432/simple_bank?sslmode=disable`
+But when to restart `postgres` container it may be run on different IP.
+
+The best solution is creaate your own net work in docker and run both of its in this network. And in this net work it doesn't use IP to indentify it use the container_name
+
+```bash
+# create new network
+$ docker network create bank-network
+
+# connect postgres to this network
+$ docker network connect bank-network postgres
+
+# run simplebank container in this network
+$ docker run --name simplebank -p 8080:8080 --network=bank-network -e DB_SOURCE="postgres://postgres:postgres@postgres:5432/simple_bank?sslmode=disable" simplebank:latest
+
+## successfull
+```

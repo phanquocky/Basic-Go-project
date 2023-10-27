@@ -94,3 +94,11 @@ $ docker run --name simplebank -p 8080:8080 --network=bank-network -e DB_SOURCE=
 
 ## successfull
 ```
+
+# GRPC
+
+1. Define Api and datastructure:
+   Using ptrotocol buffer to generate go code for grpc server, client
+   ref: https://grpc.io/docs/languages/go/quickstart/
+   Using Evans grpc cli to interact with grpc server
+   ref: https://github.com/ktr0731/evans
